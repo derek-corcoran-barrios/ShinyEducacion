@@ -1,4 +1,4 @@
-library(shiny)
+#library(shiny)
 library(tidyverse)
 library(broom)
 library(miniUI)
@@ -7,37 +7,37 @@ library(miniUI)
 ui <- miniPage(
     
     # Application title
-    miniTitleBar("Simulating ANOVA"),
+    miniPage(miniTitleBar("Simulating ANOVA")),
     
     # Sidebar with a slider input for number of bins 
-    miniContentPanel(fillCol(flex = c(10, 3, 3,3,3,3,3,5), 
-                             plotOutput("ANOVAout"),
-                             radioButtons("radio", label = "Tipo de error",
-                                          choices = list("Totales" = 1, "Variable" = 2, "Error" = 3),selected = 1, inline=T),
-                             sliderInput("muestra",
-                                         "Número de muestras:",
-                                         min = 20, max = 80, value = 30),
-                             fillRow(sliderInput("MediaA", "Media del grupo A:"
-                                                 , min = 20, max = 80, value = 50),
-                                     selectInput("DistA", "Distribución Grupo A:",
-                                                 c("Normal" = "norm",
-                                                   "Lognormal" = "logn",
-                                                   "Uniforme" = "unif"))),
-                             fillRow(sliderInput("MediaB", "Media del grupo B:"
-                                                 , min = 20, max = 80, value = 50),
-                                     selectInput("DistB", "Distribución Grupo B:",
-                                                 c("Normal" = "norm",
-                                                   "Lognormal" = "logn",
-                                                   "Uniforme" = "unif"))),
-                             fillRow(sliderInput("MediaC", "Media del grupo C:"
-                                                 , min = 20, max = 80, value = 50),
-                                     selectInput("DistC", "Distribución Grupo C:",
-                                                 c("Normal" = "norm",
-                                                   "Lognormal" = "logn",
-                                                   "Uniforme" = "unif"))),
-                             tableOutput("ANOVAtable"),
-                             tableOutput("Test")
-    )
+    fluidRow(column(12,plotOutput("ANOVAout"),
+                    radioButtons("radio", label = "Tipo de error",
+                                 choices = list("Totales" = 1, "Variable" = 2, "Error" = 3),selected = 1, inline=T),
+                    sliderInput("muestra",
+                                "Número de muestras:",
+                                min = 20, max = 80, value = 30),
+                    column(6, sliderInput("MediaA", "Media del grupo A:"
+                                          , min = 20, max = 80, value = 50),
+                           sliderInput("MediaB", "Media del grupo B:"
+                                       , min = 20, max = 80, value = 50),
+                           sliderInput("MediaC", "Media del grupo C:"
+                                       , min = 20, max = 80, value = 50),
+                           tableOutput("ANOVAtable")
+                           ),
+                    column(6, selectInput("DistA", "Distribución Grupo A:",
+                                        c("Normal" = "norm",
+                                          "Lognormal" = "logn",
+                                          "Uniforme" = "unif")),
+                           selectInput("DistB", "Distribución Grupo B:",
+                                       c("Normal" = "norm",
+                                         "Lognormal" = "logn",
+                                         "Uniforme" = "unif")),
+                           selectInput("DistC", "Distribución Grupo C:",
+                                       c("Normal" = "norm",
+                                         "Lognormal" = "logn",
+                                         "Uniforme" = "unif")),
+                           tableOutput("Test"))) 
+                             
     )
 )
 
@@ -77,3 +77,4 @@ server <- function(input, output) {
 
 # Run the application 
 shinyApp(ui = ui, server = server)
+
