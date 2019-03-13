@@ -20,9 +20,9 @@ x <- seq(from = 0, to = 100, by = 10)
 
 ### Vectores
 
-Los vectores son la estructura mas básica de datos en `R`, y es una secuencia de datos, los cuales pueden ser numericos, de carácteres (letras), booleanos (Verdaderos o Falsos), etc. 
+Los vectores son la estructura mas básica de datos en `R`, y es una secuencia de datos, los cuales pueden ser numéricos, de caracteres (letras), booleanos (Verdaderos o Falsos), etc. 
 
-La forma mas común de crear un *vector* es con la función `c`, como ejemplo generaremos un vector llamado x, el cual tendra los numero del 0 al 100 en intervalos de 10.
+La forma mas común de crear un *vector* es con la función `c`, como ejemplo generaremos un vector llamado x, el cual tendrá los numero del 0 al 100 en intervalos de 10.
 
 ```{r, echo = TRUE}
 x <- c(0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100)
@@ -46,7 +46,7 @@ Si quisieran eliminar el tercer y quinto elemento de el vector `x`, usaríamos e
 x[-c(3, 5)]
 ```
 
-En el siguiente ejercicio obten un nuevo vector `y` con el tercer, quinto y décimo elemento:
+En el siguiente ejercicio obtén un nuevo vector `y` con el tercer, quinto y décimo elemento:
 
 #### Ejercicio 1
 
@@ -83,13 +83,13 @@ El data frame es el corazón de las bases de datos, y es una tabla nada más, y 
 kable(iris, digits = 3) %>% kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = F) %>% scroll_box(width = "900px", height = "200px")
 ```
 
-Para subsetear un dataframe, usamos los corchetes cuadrados nuevamente, pero usamos una coma para separar las filas y las columnas, donde antes de la coma tenemos las filas y después las columnas. De esa forma para generar desde el dataframe `iris` un nuevo dataframe llamado `DF` que tiene las columnas de largo de petalo (tercera columna) y la especie (quinta columna), de las primeras diez observaciones lo haría de la siguiente forma:
+Para subsetear un dataframe, usamos los corchetes cuadrados nuevamente, pero usamos una coma para separar las filas y las columnas, donde antes de la coma tenemos las filas y después las columnas. De esa forma para generar desde el dataframe `iris` un nuevo dataframe llamado `DF` que tiene las columnas de largo de pétalo (tercera columna) y la especie (quinta columna), de las primeras diez observaciones lo haría de la siguiente forma:
 
 ```{r, echo = TRUE}
 DF <- iris[c(1:10),c(3,5)]
 ```
 
-Genera un nuevo Dataframe en base a `iris`, llamado `df`, el cual tenga las primeras 3 medidas de largo de sépalo y largo de pétalo de cada una de las 3 especies, para esto, modifíca el siguiente código
+Genera un nuevo Dataframe en base a `iris`, llamado `df`, el cual tenga las primeras 3 medidas de largo de sépalo y largo de pétalo de cada una de las 3 especies, para esto, modifica el siguiente código
 
 ```{r especies, exercise=TRUE, exercise.lines = 5}
 df <- iris[c(1:10),c(3,5)]
@@ -98,7 +98,7 @@ df
 
 ## Resumen de datos en R
 
-Una de las herramientas mas poderosas para resumir y explorar datos están en el paquete `tidyverse`. Dentor de este paquete usaremos las siguientes funciones:
+Una de las herramientas mas poderosas para resumir y explorar datos están en el paquete `tidyverse`. Dentro de este paquete usaremos las siguientes funciones:
 
 - *summarize*
 - *group_by*
@@ -107,7 +107,7 @@ Una de las herramientas mas poderosas para resumir y explorar datos están en el
 
 ### summarize y group_by
 
-Estas dos funciones usualmente se usan en conjunto, `summarize` resume una variable y `group_by` reune observaciones según una variable. Volviendo al caso de `iris` puedo generar una tabla que sea la media del largo del pétalo usando solo la función `summarize`:
+Estas dos funciones usualmente se usan en conjunto, `summarize` resume una variable y `group_by` reúne observaciones según una variable. Volviendo al caso de `iris` puedo generar una tabla que sea la media del largo del pétalo usando solo la función `summarize`:
 
 ```{r, echo=TRUE}
 MEAN <- summarize(iris, MEAN.PETAL = mean(Petal.Length))
@@ -117,7 +117,7 @@ MEAN <- summarize(iris, MEAN.PETAL = mean(Petal.Length))
 kable(MEAN, digits = 3) %>% kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = F)
 ```
 
-A su vez, si quiero agrupar por especie y ver la media de la misma variable ocupo el siguente código
+A su vez, si quiero agrupar por especie y ver la media de la misma variable ocupo el siguiente código
 
 ```{r, echo=TRUE}
 MEAN <- group_by(iris, Species)
@@ -130,7 +130,7 @@ kable(MEAN, digits = 3) %>% kable_styling(bootstrap_options = c("striped", "hove
 
 ### Pipeline (%>%)
 
-El pipeline ` %>%` me ahorra unas pocas lineas. Al usar el pipeline se parte con un data.frame y se agregan funciones de dplyr hasta llegar al resultado deseado. Puedo llegar al mismo resultado que en el codigo anterior con el siguiente código usando el pipeline:
+El pipeline ` %>%` me ahorra unas pocas lineas. Al usar el pipeline se parte con un data.frame y se agregan funciones de dplyr hasta llegar al resultado deseado. Puedo llegar al mismo resultado que en el código anterior con el siguiente código usando el pipeline:
 
 ```{r, echo=TRUE}
 MEAN <- iris %>% group_by(Species) %>% summarize(MEAN.PETAL = mean(Petal.Length))
