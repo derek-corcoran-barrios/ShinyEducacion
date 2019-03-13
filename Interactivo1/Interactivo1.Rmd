@@ -1,5 +1,5 @@
 ---
-title: "Exporación de y visualización de datos"
+title: "Exporación de datos"
 output:
   learnr::tutorial:
     progressive: true
