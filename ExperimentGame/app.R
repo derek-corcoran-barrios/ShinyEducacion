@@ -10,6 +10,9 @@
 library(shiny)
 library(nessy)
 library(beepr)
+library(tidyverse)
+library(ggplot2)
+library(ggimage)
 
 # Define UI for application that draws a histogram
 ui <-
