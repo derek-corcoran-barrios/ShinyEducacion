@@ -22,9 +22,6 @@ ui <-
     container_with_title("Budget",textOutput("budget")),
     container_with_title(
         title = "Buttons",
-        checkboxGroupInput("checkGroup", label = h3("Select controls in your chambers"), 
-                           choices = list("Temperature" = 1, "Watering" = 2, "Humidity" = 3),
-                           selected = 1),
         fluidPage(sidebarPanel(
             container_with_title(title = "Plants",
                                  numericInput(inputId= "Plants", label = "Cuantas plantas totales plantarás ($500 each)", 
@@ -32,12 +29,16 @@ ui <-
                                               min = 0, 
                                               max = 100, 
                                               step = 1)),
-            numericInput(inputId= "Camara", label = "Cuantas camaras de cultivo usarás", 
-                         value = 2, 
-                         min = 0, 
-                         max = 100, 
-                         step = 1),
-            uiOutput("TemperatureControl")
+            container_with_title(title = "Chambers",
+                                 numericInput(inputId= "Camara", label = "Cuantas camaras de cultivo usarás", 
+                                              value = 2, 
+                                              min = 0, 
+                                              max = 100, 
+                                              step = 1),
+                                 uiOutput("ChamberControls"),
+                                 uiOutput("TemperatureControl")
+                                 )
+            
         ), mainPanel(
             plotOutput("PlantGraph")
         ))
@@ -81,6 +82,12 @@ server <- function(input, output, session) {
     # observeEvent(NewBudget() > 0, {
     #     beepr::beep(2)
     # })
+    output$ChamberControls <- renderUI({if(input$Camara == 0){NULL} else {
+        checkboxGroupInput("checkGroup", label = "Select controls in your chambers", 
+                           choices = list("Temperature" = 1, "Watering" = 2, "Humidity" = 3),
+                           selected = 1)
+    }})
+    
     output$TemperatureControl <- renderUI({if(input$Camara == 0 | !(1 %in% input$checkGroup)){NULL} else {
         lapply(1:input$Camara, function(i) {
             sliderInput(inputId = paste0("TempChamber",i),
