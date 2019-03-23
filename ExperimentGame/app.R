@@ -107,7 +107,7 @@ server <- function(input, output, session) {
                      shinyjs::toggle(id = "advancedT", anim = TRUE))
     
     output$HideTemp <- renderUI({if(input$Camara == 0 | !(1 %in% input$checkGroup)){NULL} else {
-        a(id = "TempAdvanced", "Show/hide Temperature info")
+        a(id = "TempAdvanced", button_error("TempButton", "Show/hide Temperature info"))
     }})
     
     output$TempControl <- renderUI({if(input$Camara == 0 | !(1 %in% input$checkGroup)){NULL} else {
@@ -126,7 +126,7 @@ server <- function(input, output, session) {
                      shinyjs::toggle(id = "advancedW", anim = TRUE))
     
     output$HideWater <- renderUI({if(input$Camara == 0 | !(2 %in% input$checkGroup)){NULL} else {
-        a(id = "WaterAdvanced", "Success", "Show/hide Watering info")
+        a(id = "WaterAdvanced", button_success("ButtonWater", "Show/hide Watering info"))
     }})
     
     output$WateringControl <- renderUI({if(input$Camara == 0 | !(2 %in% input$checkGroup)){NULL} else {
@@ -145,7 +145,7 @@ server <- function(input, output, session) {
                      shinyjs::toggle(id = "advancedH", anim = TRUE))
     
     output$HideHum <- renderUI({if(input$Camara == 0 | !(3 %in% input$checkGroup)){NULL} else {
-        a(id = "HumidityAdvanced", "Show/hide Humidity info")
+        a(id = "HumidityAdvanced", button("ButtonHum", "Show/hide humidity info"))
     }})
     
     output$HumidityControl <- renderUI({if(input$Camara == 0 | !(3 %in% input$checkGroup)){NULL} else {
