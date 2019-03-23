@@ -36,7 +36,18 @@ ui <-
                                               max = 100, 
                                               step = 1),
                                  uiOutput("ChamberControls"),
-                                 uiOutput("TemperatureControl")
+                                 ### Temp
+                                 uiOutput("HideTemp"),
+                                 shinyjs::hidden(div(id = "advancedT",
+                                                     uiOutput("TempControl"))),
+                                 ### Watering
+                                 uiOutput("HideWater"),
+                                 shinyjs::hidden(div(id = "advancedW",
+                                                     uiOutput("WateringControl"))),
+                                 ### Humidity
+                                 uiOutput("HideHum"),
+                                 shinyjs::hidden(div(id = "advancedH",
+                                                     uiOutput("HumidityControl")))
                                  )
             
         ), mainPanel(
@@ -51,9 +62,7 @@ ui <-
 server <- function(input, output, session) {
     
     ## Show/hide contorls of chambers depending on checkboxGroupInput
-    observe({
-        shinyjs::toggleState("TemperatureControl", 1 %in% input$checkGroup)
-    })
+
     
     NewBudget <- reactive({100000 - (10000*input$Camara + 500*input$Plants)})
     output$budget <- renderPrint({prettyNum(Budget <- NewBudget(), big.mark = ",", big.interval = 7L)})
@@ -82,19 +91,70 @@ server <- function(input, output, session) {
     # observeEvent(NewBudget() > 0, {
     #     beepr::beep(2)
     # })
+    
+    ####################################################
+    ###############Controles de camara##################
+    ####################################################
+    
     output$ChamberControls <- renderUI({if(input$Camara == 0){NULL} else {
         checkboxGroupInput("checkGroup", label = "Select controls in your chambers", 
-                           choices = list("Temperature" = 1, "Watering" = 2, "Humidity" = 3),
-                           selected = 1)
+                           choices = list("Temperature" = 1, "Watering" = 2, "Humidity" = 3))
     }})
     
-    output$TemperatureControl <- renderUI({if(input$Camara == 0 | !(1 %in% input$checkGroup)){NULL} else {
+    ###Temp
+    
+    shinyjs::onclick("TempAdvanced",
+                     shinyjs::toggle(id = "advancedT", anim = TRUE))
+    
+    output$HideTemp <- renderUI({if(input$Camara == 0 | !(1 %in% input$checkGroup)){NULL} else {
+        a(id = "TempAdvanced", "Show/hide Temperature info")
+    }})
+    
+    output$TempControl <- renderUI({if(input$Camara == 0 | !(1 %in% input$checkGroup)){NULL} else {
         lapply(1:input$Camara, function(i) {
             sliderInput(inputId = paste0("TempChamber",i),
                         label = paste("Temperature Chamber", i),
                         value = 10,
                         min = 1,
-                        max = 20)
+                        max = 30)
+        })
+    }})
+    
+    ###Water
+    
+    shinyjs::onclick("WaterAdvanced",
+                     shinyjs::toggle(id = "advancedW", anim = TRUE))
+    
+    output$HideWater <- renderUI({if(input$Camara == 0 | !(2 %in% input$checkGroup)){NULL} else {
+        a(id = "WaterAdvanced", "Success", "Show/hide Watering info")
+    }})
+    
+    output$WateringControl <- renderUI({if(input$Camara == 0 | !(2 %in% input$checkGroup)){NULL} else {
+        lapply(1:input$Camara, function(i) {
+            sliderInput(inputId = paste0("WaterChamber",i),
+                        label = paste("Watering Chamber", i),
+                        value = 10,
+                        min = 1,
+                        max = 300)
+        })
+    }})
+    
+    ### Humidity
+    
+    shinyjs::onclick("HumidityAdvanced",
+                     shinyjs::toggle(id = "advancedH", anim = TRUE))
+    
+    output$HideHum <- renderUI({if(input$Camara == 0 | !(3 %in% input$checkGroup)){NULL} else {
+        a(id = "HumidityAdvanced", "Show/hide Humidity info")
+    }})
+    
+    output$HumidityControl <- renderUI({if(input$Camara == 0 | !(3 %in% input$checkGroup)){NULL} else {
+        lapply(1:input$Camara, function(i) {
+            sliderInput(inputId = paste0("HumidityChamber",i),
+                        label = paste("Humidity Chamber", i),
+                        value = 10,
+                        min = 1,
+                        max = 100)
         })
     }})
 }
