@@ -17,24 +17,27 @@ library(ggimage)
 # Define UI for application that draws a histogram
 ui <-
     
-    cartridge(
+    cartridge(shinyjs::useShinyjs(),
     title = "{Design your own experiment}",
     container_with_title("Budget",textOutput("budget")),
     container_with_title(
         title = "Buttons",
-        radio_buttons("sure", "Are you sure?", c("yes", "no")),
+        checkboxGroupInput("checkGroup", label = h3("Select controls in your chambers"), 
+                           choices = list("Temperature" = 1, "Watering" = 2, "Humidity" = 3),
+                           selected = 1),
         fluidPage(sidebarPanel(
+            container_with_title(title = "Plants",
+                                 numericInput(inputId= "Plants", label = "Cuantas plantas totales plantarás ($500 each)", 
+                                              value = 2, 
+                                              min = 0, 
+                                              max = 100, 
+                                              step = 1)),
             numericInput(inputId= "Camara", label = "Cuantas camaras de cultivo usarás", 
                          value = 2, 
                          min = 0, 
                          max = 100, 
                          step = 1),
-            numericInput(inputId= "Plants", label = "Cuantas plantas totales plantarás", 
-                         value = 2, 
-                         min = 0, 
-                         max = 100, 
-                         step = 1),
-            uiOutput("moreControls")
+            uiOutput("TemperatureControl")
         ), mainPanel(
             plotOutput("PlantGraph")
         ))
@@ -46,7 +49,12 @@ ui <-
 
 server <- function(input, output, session) {
     
-    NewBudget <- reactive({100000 - 10000*input$Camara})
+    ## Show/hide contorls of chambers depending on checkboxGroupInput
+    observe({
+        shinyjs::toggleState("TemperatureControl", 1 %in% input$checkGroup)
+    })
+    
+    NewBudget <- reactive({100000 - (10000*input$Camara + 500*input$Plants)})
     output$budget <- renderPrint({prettyNum(Budget <- NewBudget(), big.mark = ",", big.interval = 7L)})
     
     Plants <- reactive({d <- if(input$Camara == 0){NULL} else {
@@ -73,7 +81,7 @@ server <- function(input, output, session) {
     # observeEvent(NewBudget() > 0, {
     #     beepr::beep(2)
     # })
-    output$moreControls <- renderUI({if(input$Camara == 0){NULL} else {
+    output$TemperatureControl <- renderUI({if(input$Camara == 0 | !(1 %in% input$checkGroup)){NULL} else {
         lapply(1:input$Camara, function(i) {
             sliderInput(inputId = paste0("TempChamber",i),
                         label = paste("Temperature Chamber", i),
