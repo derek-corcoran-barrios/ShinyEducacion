@@ -47,8 +47,11 @@ ui <-
                                  ### Humidity
                                  uiOutput("HideHum"),
                                  shinyjs::hidden(div(id = "advancedH",
-                                                     uiOutput("HumidityControl")))
+                                                     uiOutput("HumidityControl"))),
+                                 ###Run experiment
+                                 uiOutput("Run")
                                  )
+            
             
         ), mainPanel(
             plotOutput("PlantGraph")
@@ -64,7 +67,7 @@ server <- function(input, output, session) {
     ## Show/hide contorls of chambers depending on checkboxGroupInput
 
     
-    NewBudget <- reactive({100000 - (10000*input$Camara + 500*input$Plants)})
+    NewBudget <- reactive({100000 - ((10000*input$Camara + 1000 * length(input$checkGroup)) + 500*input$Plants)})
     output$budget <- renderPrint({prettyNum(Budget <- NewBudget(), big.mark = ",", big.interval = 7L)})
     
     Plants <- reactive({d <- if(input$Camara == 0){NULL} else {
@@ -97,7 +100,7 @@ server <- function(input, output, session) {
     ####################################################
     
     output$ChamberControls <- renderUI({if(input$Camara == 0){NULL} else {
-        checkboxGroupInput("checkGroup", label = "Select controls in your chambers", 
+        checkboxGroupInput("checkGroup", label = "Select controls in your chambers (1000 extra por cada control)", 
                            choices = list("Temperature" = 1, "Watering" = 2, "Humidity" = 3))
     }})
     
@@ -157,6 +160,15 @@ server <- function(input, output, session) {
                         max = 100)
         })
     }})
+    
+    #### Run experiment
+    shinyjs::onclick("RunExperiment",
+                     shinyjs::toggle(id = "RunExp", anim = TRUE))
+    
+    output$Run <- renderUI({if(NewBudget() < 0 ){NULL} else {
+        a(id = "RunExperiment", button("Run", "Run Experiment"))
+    }})
+    
 }
 
 
